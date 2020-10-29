@@ -1,6 +1,6 @@
 import pandas as pd
 
-arquivo = "/Users/alexandrethadeu/Documents/Python/Teste/dados/covid.csv"
+arquivo = "/Users/alexandrethadeu/Documents/Python/covid_dataframe/dados/covid.csv"
 covid_df = pd.read_csv(arquivo, sep=";", engine="python")
 
 # Dados
@@ -26,6 +26,7 @@ info = {
     'Obitos': [total_obitos]
 }
 data = pd.DataFrame(info)
+data
 
 # Agrupando por municipios
 group_municipio = covid_df.groupby('municipio')
@@ -92,5 +93,13 @@ bar = df_bar.plot.bar()
 bar
 
 total_habitantes_60_df = pd.DataFrame(group_municipio['pop_60'].last())
-covid_resume['pop_60'] = total_habitantes_60_df['pop_60']
+covid_resume['pop_60'] = total_habitantes_60_df['pop_60'].round()
 covid_resume
+covid_resume['idoso_pc'] = (
+    covid_resume['pop_60'] / covid_resume['pop']) * 100000
+covid_resume['idoso_pc'] = covid_resume['idoso_pc'].round()
+covid_resume
+
+df_bar2 = covid_resume.groupby(['regiao'])['idoso_pc'].mean()
+bar2 = df_bar2.plot.bar()
+bar
